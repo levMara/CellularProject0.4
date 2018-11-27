@@ -7,22 +7,11 @@ namespace DB
 
     public class CellularModelDB : DbContext
     {
-        NewSeed seed = new NewSeed();
-        public void CheckDB()
-        {
-            if (!Database.Exists())
-            {
-                seed.InitDB();
-            }
-        
-        }
-    
         public CellularModelDB()
             : base("name=CellularModelDB")
         {
-            CheckDB();
-
-            // Database.SetInitializer(new DBSeedInitalizer());         
+            Database.SetInitializer(new DBSeedInitalizer());
+            
         }
 
         public virtual DbSet<Call> CallsTable { get; set; }
@@ -31,7 +20,6 @@ namespace DB
         public virtual DbSet<Employee> EmployeesTable { get; set; }
         public virtual DbSet<Line> LinesTable { get; set; }
         public virtual DbSet<Package> PackagesTable { get; set; }
-        public virtual DbSet<PackageInclude> PackageIncludesTable { get; set; }
         public virtual DbSet<Payment> PaymentsTable { get; set; }
         public virtual DbSet<SelectedNumbers> SelectedNumbersTable { get; set; }
         public virtual DbSet<Sms> SmsTable { get; set; }

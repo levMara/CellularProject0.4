@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CRM_DAL
+namespace Common.Enum
 {
-    public class Class1
+    public enum PackageType
     {
+        templateTokman,
+        templatePlan,
+        custom
     }
 }

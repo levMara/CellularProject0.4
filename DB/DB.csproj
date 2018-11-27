@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="CellularModelDB.cs" />
     <Compile Include="DBSeedInitializer.cs" />
-    <Compile Include="NewSeed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

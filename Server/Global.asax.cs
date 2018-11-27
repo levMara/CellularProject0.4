@@ -1,4 +1,5 @@
-﻿using DB;
+﻿using Common;
+using DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,13 @@ namespace Server
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-           // using (var dc = new CellularModelDB()) { }
-           CellularModelDB db = new CellularModelDB();
+           //create db if model chenge
+            using(var context = new CellularModelDB())
+            {
+                List<Client> clients = context.ClientsTable.ToList();
+            }
 
-            
+
         }
     }
 }

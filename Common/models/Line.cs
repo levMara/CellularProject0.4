@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,15 +9,22 @@ namespace Common
 {
     public class Line
     {
+        [Key]
         public int LineID { get; set; }
+
+        [Required(AllowEmptyStrings = false), MinLength(10), MaxLength(10)]
         public string LineNumber { get; set; }
         public DateTime JoinDate { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual Package Package { get; set; }
+
+        [Required]
         public Client ClientID { get; set; }
+
         public ICollection<Call> Calls { get; set; }
         public ICollection<Sms> Sms { get; set; }
-        public ICollection<Payment> payments { get; set; }
+        public ICollection<Payment> Payments { get; set; }
 
     }
 }

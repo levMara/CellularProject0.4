@@ -13,6 +13,6 @@ namespace Common
         public string Password { get; set; }
         public bool RemmberMe { get; set; }
     
-        public UserLogin UserType { get; set; }
+        public Enum.UserType UserType { get; set; }
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common
+namespace Common.Interfaces
 {
-    class testgit
+    public interface ILine
     {
     }
 }

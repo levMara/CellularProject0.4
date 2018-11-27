@@ -8,6 +8,6 @@ namespace Common
         public double MinuteRate { get; set; }
         public double SmsRate { get; set; }
 
-        //public virtual ClientTypeName TypeName { get; set; }
+
     }
 }
