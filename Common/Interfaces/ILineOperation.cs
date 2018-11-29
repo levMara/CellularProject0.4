@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface ILine
+    public interface ILineOperatoin
     {
+        void AddLine(int clientId);
+
+        ICollection<Line> GetAllLines();
+
+        void DeleteLine(string lineNumber);
     }
 }

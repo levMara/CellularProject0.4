@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enum\PackageType.cs" />
-    <Compile Include="Interfaces\IClient.cs" />
-    <Compile Include="Interfaces\ILine.cs" />
+    <Compile Include="Interfaces\IClientOperation.cs" />
+    <Compile Include="Interfaces\ILineOperation.cs" />
+    <Compile Include="Interfaces\IPackageOperation.cs" />
+    <Compile Include="Interfaces\IUserLoginOperation.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="models\Call.cs" />
     <Compile Include="models\Client.cs" />

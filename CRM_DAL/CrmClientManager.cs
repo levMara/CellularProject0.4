@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace Crm_Dal
 {
-    public class CrmClientManager
+    public class CrmClientManager : IClientOperation
     {
+        CellularModelDB _context = new CellularModelDB();
+
         public void AddClient(Client newClient)
         {
             try
@@ -28,20 +30,16 @@ namespace Crm_Dal
             {
                 throw;
             }
+        }
 
-        }   
-
-        internal void DeleteClient(int id)
+        public Client GetClient(int clientId)
         {
             try
             {
-                Client tmp = new Client();
-                using (var contex = new CellularModelDB())
+                using (_context)
                 {
-                    tmp = contex.ClientsTable.FirstOrDefault((c) => c.ClientID == id);
-                    //line off
-
-                   
+                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
+                    return tmp;
                 }
             }
             catch (Exception)
@@ -50,5 +48,52 @@ namespace Crm_Dal
                 throw;
             }
         }
+
+        public void UpdateClientDetails(int clientId, Client editClient)
+        {
+            try
+            {
+
+                using (_context)
+                {
+                    //packageToEdit.PackageId = EditedPackage.PackageId;
+                    //context.Entry(EditedPackage).CurrentValues.SetValues(packageToEdit);
+                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
+                    editClient.ClientID = clientId;
+                    _context.Entry(tmp).CurrentValues.SetValues(editClient);
+
+                }
+
+                // client.ClientID;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteClient(int id)
+        {
+            try
+            {
+                Client tmp = new Client();
+                using (var contex = new CellularModelDB())
+                {
+                    tmp = contex.ClientsTable.FirstOrDefault((c) => c.ClientID == id);
+                    foreach (var line in tmp.Lines)
+                    {
+                        line.IsActive = false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+      
     }
 }

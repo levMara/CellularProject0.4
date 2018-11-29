@@ -1,4 +1,5 @@
-﻿using Crm_Dal;
+﻿using Common.Interfaces;
+using Crm_Dal;
 using DB;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,14 @@ using System.Web.Http;
 
 namespace Server.Controllers
 {
-    public class CrmLineController : ApiController
+    public class LineController : ApiController
     {
-        CrmLineManager _lineManager = new CrmLineManager();
+        ILineOperatoin _lineManager;
+
+        public LineController(ILineOperatoin lineOperatoin)
+        {
+            _lineManager = lineOperatoin;
+        }
 
         public void AddLine(int clientId)
         {

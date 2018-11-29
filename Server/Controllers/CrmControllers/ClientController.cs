@@ -15,9 +15,14 @@ using DB;
 
 namespace Server.Controllers
 {
-    public class CrmClientController : ApiController
+    public class ClientController : ApiController
     {
-        CrmClientManager _clientManager = new CrmClientManager();
+        IClientOperation _ClientMng;
+
+        public ClientController(IClientOperation clientOperetion)
+        {
+            _ClientMng = clientOperetion;
+        }
         
         [HttpPost]
         [Route("api/Crm/Addclient")]
@@ -29,7 +34,7 @@ namespace Server.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                _clientManager.AddClient(client);               
+                _ClientMng.AddClient(client);               
             }
             catch (Exception)
             {
@@ -44,7 +49,7 @@ namespace Server.Controllers
         {
             try
             {
-                //_clientManager.DeleteClient(id);            
+                _ClientMng.DeleteClient(id);           
             }
             catch (Exception)
             {

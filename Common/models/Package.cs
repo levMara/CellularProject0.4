@@ -22,12 +22,13 @@ namespace Common
 
         //For other package types
         public double? MonthlyPrice { get; set; }
-        public Decimal? DiscountPrecentage { get; set; }
+        public double? DiscountPrecentage { get; set; }
 
         //Except template
         public DateTime? PackageJoinDate { get; set; }
         public DateTime? PackageEndDate { get; set; }
-  
+
+        public SelectedNumbers SelectedNumbers { get; set; }
         public ICollection<Line> Line { get; set; }
     }
 }

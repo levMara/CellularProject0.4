@@ -20,7 +20,7 @@ namespace Common
         public virtual Package Package { get; set; }
 
         [Required]
-        public Client ClientID { get; set; }
+        public Client Client { get; set; }
 
         public ICollection<Call> Calls { get; set; }
         public ICollection<Sms> Sms { get; set; }

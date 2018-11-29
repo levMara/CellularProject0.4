@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Interfaces;
 using DB;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace Crm_Dal
 {
-    public class CrmLineManager
+    public class CrmLineManager : ILineOperatoin
     {
+        CellularModelDB _context = new CellularModelDB();
         readonly string _lineNumber = "0520000000";
         int _count = 1;
 
@@ -41,12 +43,29 @@ namespace Crm_Dal
                 {
                     Client tmp = context.ClientsTable.FirstOrDefault((c) => c.ClientID == clientId);
 
-                    Line line = new Line { ClientID = tmp, IsActive = true, JoinDate = DateTime.Now, LineNumber = GenerateLineNumber()};
+                    Line line = new Line { Client = tmp, IsActive = true, JoinDate = DateTime.Now, LineNumber = GenerateLineNumber()};
                     tmp.Lines.Add(line);
                 }
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+
+        public ICollection<Line> GetAllLines()
+        {
+            try
+            {
+                using (_context)
+                {
+                    List<Line> lines = _context.LinesTable.Where((l) => l.IsActive).ToList();
+                    return lines;
+                }
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }
