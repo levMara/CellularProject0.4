@@ -26,7 +26,7 @@ namespace Server.Controllers
         
         [HttpPost]
         [Route("api/Crm/Addclient")]
-        public IHttpActionResult PostClient(Client client)
+        public IHttpActionResult PostClient([FromBody]Client client)
         {
             try
             {
@@ -36,31 +36,60 @@ namespace Server.Controllers
                 }
                 _ClientMng.AddClient(client);               
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
                 throw;
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = client.ClientID }, client);
+            return Ok();
         }
 
-        [Route("api/Cem/deleteClient/{int id}")]
+        [Route("api/Crm/DeleteClient/{int id}")]
         public IHttpActionResult DeleteClient(int id)
         {
             try
             {
                 _ClientMng.DeleteClient(id);           
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
                 throw;
             }
             return Ok();
         }
 
+        [Route("api/Crm/GetClient/{int id}")]
+        public IHttpActionResult GetClient(int id)
+        {
+            Client tmp;
+            try
+            {
+                tmp = _ClientMng.GetClient(id);
+            }
+            catch (Exception e)
+            {
+                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+                throw;
+            }
+            return Ok(tmp);
+        }
 
-
+        [Route("api/Crm/UpdateClient")]
+        public IHttpActionResult UpdateClient([FromBody]Client editClient)
+        {           
+            try
+            {
+                _ClientMng.UpdateClientDetails( ,editClient);
+            }
+            catch (Exception e)
+            {
+                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+                throw;
+            }
+            return Ok();
+        }
 
 
 

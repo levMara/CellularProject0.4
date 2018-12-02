@@ -26,9 +26,10 @@ namespace Crm_Dal
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+                throw new Exception();
             }
         }
 
@@ -42,10 +43,10 @@ namespace Crm_Dal
                     return tmp;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+                throw new Exception();
             }
         }
 

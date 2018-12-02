@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    class Logger
+    public class Logger
     {
         private static object _key = new object();
         private static Logger _logInstance { get; set; }
