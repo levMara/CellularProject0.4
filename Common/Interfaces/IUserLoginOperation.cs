@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Common.Interfaces
 {
     public interface IUserLoginOperation
     {
-        UserLogin Login(string userName, string password);
+        UserLogin Login(string userName, string password/*, out UserLoginMessage msg*/);
     }
 }

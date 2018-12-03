@@ -16,12 +16,14 @@ namespace Server.Controllers
 {
     public class PackagesController : ApiController
     {
-        IPackageOperation _packageManager;
+        IPackageOperation _packageMng;
 
         public PackagesController(IPackageOperation packageOperation)
         {
-            _packageManager = packageOperation;
+            _packageMng = packageOperation;
         }
+
+        
 
         //// GET: api/Packages
         //public IQueryable<Package> GetPackagesTable()

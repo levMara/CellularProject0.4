@@ -60,7 +60,8 @@ namespace Server.Controllers
             return Ok();
         }
 
-        [Route("api/Crm/GetClient/{int id}")]
+        [HttpGet]
+        [Route("api/Crm/GetClient/{id}")]
         public IHttpActionResult GetClient(int id)
         {
             Client tmp;
@@ -76,20 +77,25 @@ namespace Server.Controllers
             return Ok(tmp);
         }
 
-        [Route("api/Crm/UpdateClient")]
-        public IHttpActionResult UpdateClient([FromBody]Client editClient)
-        {           
-            try
-            {
-                _ClientMng.UpdateClientDetails( ,editClient);
-            }
-            catch (Exception e)
-            {
-                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
-                throw;
-            }
-            return Ok();
-        }
+
+
+
+
+
+        //[Route("api/Crm/UpdateClient")]
+        //public IHttpActionResult UpdateClient([FromBody]Client editClient)
+        //{           
+        //    try
+        //    {
+        //        _ClientMng.UpdateClientDetails( ,editClient);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+        //        throw;
+        //    }
+        //    return Ok();
+        //}
 
 
 

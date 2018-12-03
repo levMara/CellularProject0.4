@@ -12,18 +12,18 @@ namespace Server.Controllers
 {
     public class LineController : ApiController
     {
-        ILineOperatoin _lineManager;
+        ILineOperatoin _lineMng;
 
         public LineController(ILineOperatoin lineOperatoin)
         {
-            _lineManager = lineOperatoin;
+            _lineMng = lineOperatoin;
         }
 
         public void AddLine(int clientId)
         {
             try
             {
-                _lineManager.AddLine(clientId);
+                _lineMng.AddLine(clientId);
             }           
               catch (Exception)
             {

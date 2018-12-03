@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Enum;
 using Common.Interfaces;
 using DB;
 using System;
@@ -23,12 +24,38 @@ namespace Crm_Dal
                     {
                         context.ClientsTable.Add(newClient);
                         context.SaveChanges();
+                        SetUserNameAndPass(newClient);                        
                     }
                 }
             }
             catch (Exception e)
             {
-                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+                Log(e);            
+                throw new Exception();
+            }
+        }      
+
+        private void SetUserNameAndPass(Client newClient)
+        {
+            try
+            {
+                using (_context)
+                {
+                    if (newClient != null)
+                    {
+                        UserLogin user = new UserLogin
+                        {
+                            UserName = newClient.FirstName,
+                            Password = newClient.LastName,
+                            UserType = UserType.client
+                        };
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
                 throw new Exception();
             }
         }
@@ -45,7 +72,7 @@ namespace Crm_Dal
             }
             catch (Exception e)
             {
-                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+                Log(e);
                 throw new Exception();
             }
         }
@@ -54,24 +81,24 @@ namespace Crm_Dal
         {
             try
             {
-
                 using (_context)
                 {
-                    //packageToEdit.PackageId = EditedPackage.PackageId;
-                    //context.Entry(EditedPackage).CurrentValues.SetValues(packageToEdit);
-                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
-                    editClient.ClientID = clientId;
-                    _context.Entry(tmp).CurrentValues.SetValues(editClient);
+                    if (editClient != null)
+                    {
+                        Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
+                        editClient.ClientID = clientId;
+                        _context.Entry(tmp).CurrentValues.SetValues(editClient); 
+                    }
 
                 }
 
                 // client.ClientID;
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log(e);
+                throw new Exception();
             }
         }
 
@@ -89,12 +116,17 @@ namespace Crm_Dal
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log(e);
+                throw new Exception();
             }
         }
-      
+
+        private void Log(Exception e)
+        {
+            Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+
+        }
     }
 }

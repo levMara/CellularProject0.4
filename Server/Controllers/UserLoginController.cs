@@ -1,4 +1,6 @@
-﻿using Common.Interfaces;
+﻿using Common;
+using Common.Enum;
+using Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,26 +12,34 @@ namespace Server.Controllers
 {
     public class UserLoginController : ApiController
     {
-        IUserLoginOperation _ulManager;
+        IUserLoginOperation _ulMng;
 
         public UserLoginController(IUserLoginOperation ulOperation)
         {
-            _ulManager = ulOperation;
+            _ulMng = ulOperation;
         }
 
         [HttpGet]
         [Route("api/User/Login/{userName}/{password}")]
-        public void Login(string userName, string password)
-        {
+        public IHttpActionResult Login(string userName, string password)
+        {            
+            UserLogin user;
+            UserLoginMessage msg;
+            string msgg = "fff";
             try
             {
-                _ulManager.Login(userName, password);
+               user = _ulMng.Login(userName, password/*, out msg*/);
+               if(user != null)
+                {
+                   msgg = "okkkkkkkkkkkkkk";
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
                 throw;
             }
+            return Ok(msgg);
         }
 
 

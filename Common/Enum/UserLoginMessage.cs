@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common.Enum
 {
-    public enum UserType
+    public enum UserLoginMessage
     {
-        admin,
-        seller,
-        client
+        userExist,
+        userNotExist,
+        worngPassword
     }
 }
