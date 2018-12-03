@@ -19,6 +19,14 @@ namespace Server.Controllers
             _lineMng = lineOperatoin;
         }
 
+        [HttpGet]
+        [Route("api/Line/Try")]
+        public string Try()
+        {
+            return "ggggggggggggg";
+        }
+
+
         public void AddLine(int clientId)
         {
             try

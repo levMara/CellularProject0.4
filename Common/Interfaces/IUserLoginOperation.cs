@@ -9,6 +9,6 @@ namespace Common.Interfaces
 {
     public interface IUserLoginOperation
     {
-        UserLogin Login(string userName, string password/*, out UserLoginMessage msg*/);
+        UserLogin Login(string userName, string password);
     }
 }

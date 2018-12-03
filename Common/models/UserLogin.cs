@@ -16,5 +16,8 @@ namespace Common
 
         [Required]
         public Enum.UserType UserType { get; set; }
+
+        public ICollection<Client> Client { get; set; }
+        public ICollection<Employee> Employee { get; set; }
     }
 }

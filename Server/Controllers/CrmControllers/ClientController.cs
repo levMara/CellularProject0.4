@@ -61,6 +61,23 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Route("api/Client/GetClient11/{id}")]
+        public IHttpActionResult GetClient11(int id)
+        {
+            Client tmp;
+            try
+            {
+                tmp = _ClientMng.GetClient(id);
+            }
+            catch (Exception e)
+            {
+                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+                throw;
+            }
+            return Ok(tmp);
+        }
+
+        [HttpGet]
         [Route("api/Crm/GetClient/{id}")]
         public IHttpActionResult GetClient(int id)
         {

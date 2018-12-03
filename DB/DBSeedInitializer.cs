@@ -58,6 +58,21 @@ namespace DB
             context.LinesTable.Add(l4);
             context.LinesTable.Add(l5);
             context.SaveChanges();
+
+            UserLogin ul1 = new UserLogin { UserName = e1.FirstName, Password = e1.LastName, UserType = UserType.seller };
+            UserLogin ul2 = new UserLogin { UserName = e2.FirstName, Password = e2.LastName, UserType = UserType.admin };
+            UserLogin ul3 = new UserLogin { UserName = client1.FirstName, Password = client1.LastName, UserType = UserType.client };
+            UserLogin ul4 = new UserLogin { UserName = client2.FirstName, Password = client2.LastName, UserType = UserType.client };
+            UserLogin ul5 = new UserLogin { UserName = client3.FirstName, Password = client3.LastName, UserType = UserType.client };
+            UserLogin ul6 = new UserLogin { UserName = client4.FirstName, Password = client4.LastName, UserType = UserType.client };
+
+            context.UserLoginsTable.Add(ul1);
+            context.UserLoginsTable.Add(ul2);
+            context.UserLoginsTable.Add(ul3);
+            context.UserLoginsTable.Add(ul4);
+            context.UserLoginsTable.Add(ul5);
+            context.UserLoginsTable.Add(ul6);
+            context.SaveChanges();
         }
 
     }

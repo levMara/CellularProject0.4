@@ -20,54 +20,20 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/User/Login/{userName}/{password}")]
+        [Route("api/UserLogin/Login/{userName}/{password}")]
         public IHttpActionResult Login(string userName, string password)
-        {            
-            UserLogin user;
-            UserLoginMessage msg;
-            string msgg = "fff";
+        {           
+            UserLogin user;         
             try
             {
-               user = _ulMng.Login(userName, password/*, out msg*/);
-               if(user != null)
-                {
-                   msgg = "okkkkkkkkkkkkkk";
-                }
+               user = _ulMng.Login(userName, password);            
             }
             catch (Exception e)
             {
                 Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
                 throw;
             }
-            return Ok(msgg);
-        }
-
-
-        // GET: api/UserLogin
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/UserLogin/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/UserLogin
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT: api/UserLogin/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/UserLogin/5
-        public void Delete(int id)
-        {
-        }
+            return Ok(user);
+        }     
     }
 }

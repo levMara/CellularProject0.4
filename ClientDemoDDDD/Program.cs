@@ -15,7 +15,9 @@ namespace ClientDemoDDDD
         static void Main(string[] args)
         {
 
-            Function2UserLogin();
+            UserLoginTest();
+
+           // Function1();
 
             Console.ReadKey();
         }
@@ -25,10 +27,6 @@ namespace ClientDemoDDDD
         {
             using (var client = new HttpClient())
             {
-
-
-
-
                 client.BaseAddress = new Uri("http://localhost:53035");
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var id = 3;
@@ -37,20 +35,19 @@ namespace ClientDemoDDDD
                 if (res.IsSuccessStatusCode == true)
                 {
                     var json = res.Content.ReadAsStringAsync().Result;
-                    Client result = JsonConvert.DeserializeObject<Client>(json);
+                    UserLogin result = JsonConvert.DeserializeObject<UserLogin>(json);
 
-                    Console.WriteLine("ssssssssssssssss");
-                    Console.WriteLine(result.FirstName);
+                    Console.WriteLine("sucsses!!!");
+                    Console.WriteLine(result.UserName);
                 }
                 else
                 {
-                    //return Content("Calling to Post failed");
-                    Console.WriteLine("eeeeeeeeeeeeeeeeeee");
+                    Console.WriteLine("error");
                 }
             }
         }
 
-        public static void Function2UserLogin()
+        public static void UserLoginTest()
         {
             using (var client = new HttpClient())
             {
@@ -59,7 +56,9 @@ namespace ClientDemoDDDD
 
                 var userName = "levi";
                 var password = "marantz";
-                var res = client.GetAsync($"api/User/Login/{userName}/{password}").Result;
+                //var res = client.GetAsync($"api/Crm/GetClient/{id}").Result;
+                var id = 3;
+                var res = client.GetAsync($"/api/UserLogin/Login/{userName}/{password}").Result;
 
                 if (res.IsSuccessStatusCode == true)
                 {

@@ -1,5 +1,4 @@
 ﻿using Common;
-using Common.Enum;
 using Common.Interfaces;
 using DB;
 using System;
@@ -7,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Server.UserRepository
+namespace Server.Repositories
 {
     public class UserRepository : IUserLoginOperation
     {
         public UserLogin Login(string userName, string password/*, out UserLoginMessage msg*/)
-        {           
+        {
             try
             {
                 using (var context = new CellularModelDB())
@@ -30,10 +29,10 @@ namespace Server.UserRepository
                         //if (tmp != null)
                         //   // msg = UserLoginMessage.worngPassword;
                         //else
-                           // msg = UserLoginMessage.userNotExist;
+                        // msg = UserLoginMessage.userNotExist;
 
-                        return null;                  
-                    }                 
+                        return null;
+                    }
                 }
             }
             catch (Exception e)

@@ -1,5 +1,6 @@
 using Common.Interfaces;
 using Crm_Dal;
+using Server.Repositories;
 using System;
 
 using Unity;
@@ -47,6 +48,7 @@ namespace Server
             container.RegisterType<IClientOperation, CrmClientManager>();
             container.RegisterType<ILineOperatoin, CrmLineManager>();
             container.RegisterType<IPackageOperation, CrmPackageManager>();
+            container.RegisterType<IUserLoginOperation, UserRepository>();
         }
     }
 }

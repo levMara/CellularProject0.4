@@ -23,7 +23,12 @@ namespace Server.Controllers
             _packageMng = packageOperation;
         }
 
-        
+        [HttpGet]
+        [Route("api/Package/Try")]
+        public string Try()
+        {
+            return "ggggggggggggg";
+        }
 
         //// GET: api/Packages
         //public IQueryable<Package> GetPackagesTable()
