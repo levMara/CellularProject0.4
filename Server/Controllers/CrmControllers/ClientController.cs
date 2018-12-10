@@ -6,9 +6,11 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Common;
+using Common.Exceptiones;
 using Common.Interfaces;
 using Crm_Dal;
 using DB;
@@ -17,220 +19,175 @@ namespace Server.Controllers
 {
     public class ClientController : ApiController
     {
+        IBaseClientOperation _baseClientMng;
         IClientOperation _ClientMng;
 
-        public ClientController(IClientOperation clientOperetion)
+        public ClientController(IClientOperation clientOperetion, IBaseClientOperation baseClientOperation)
         {
+            _baseClientMng = baseClientOperation;
             _ClientMng = clientOperetion;
         }
         
         [HttpPost]
-        [Route("api/Crm/Addclient")]
-        public IHttpActionResult PostClient([FromBody]Client client)
+        [Route("api/Client/AddClient")]
+        public IHttpActionResult AddClient([FromBody]Client newClient)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Client addedClient;
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                _ClientMng.AddClient(client);               
+                addedClient = _baseClientMng.AddClient(newClient);               
             }
+
+            catch (DbFaildConnncetException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            catch (EntityExistsException e)
+            {
+                return BadRequest(e.Message);
+            }
+
             catch (Exception e)
             {
-                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
-                throw;
-            }
-
-            return Ok();
+                Log("Internal server error", e);
+                return InternalServerError(new InternalServerException("Error reading function"));
+            }           
+            return Ok(addedClient);
         }
 
-        [Route("api/Crm/DeleteClient/{int id}")]
+        [HttpDelete]
+        [Route("api/Client/DeleteClient/{int id}")]
         public IHttpActionResult DeleteClient(int id)
         {
+            if (id < 0 || id > 1000000000)
+            {
+                return BadRequest("Worng id");
+            }
+
+            Client deletedClient;
             try
             {
-                _ClientMng.DeleteClient(id);           
+                deletedClient = _baseClientMng.DeleteClient(id);           
             }
+
+            catch(DbFaildConnncetException e)
+            {
+                return BadRequest(e.Message);
+            }
+
             catch (Exception e)
             {
-                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
-                throw;
+                Log("Internal server error", e);
+                return InternalServerError(new InternalServerException("Error reading function"));
             }
+            
             return Ok();
         }
 
         [HttpGet]
-        [Route("api/Client/GetClient11/{id}")]
-        public IHttpActionResult GetClient11(int id)
+        [Route("api/Client/GetClient/{id}")]
+        public IHttpActionResult GetClient(int id)
         {
+            if (id < 0 || id > 1000000000)
+            {
+                return BadRequest("Worng id");
+            }
+
             Client tmp;
             try
             {
                 tmp = _ClientMng.GetClient(id);
             }
+
+            catch (DbFaildConnncetException e)
+            {
+                return BadRequest(e.Message);
+            }
+
             catch (Exception e)
             {
-                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
-                throw;
+                Log("Internal server error", e);
+                return InternalServerError(new InternalServerException("Error reading function"));
             }
+
+            if (tmp == null)
+            {
+                return NotFound(); 
+            }
+
             return Ok(tmp);
+        }
+
+        [HttpPost]
+        [Route("api/Client/UpdateClient/{id}")]
+        public IHttpActionResult UpdateClient([FromBody]Client editClient)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Client editedClient;
+            try
+            {
+                editedClient = _baseClientMng.UpdateClientDetails(editClient);
+            }
+
+            catch(DbFaildConnncetException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            catch (Exception e)
+            {
+                Log("Internal server error", e);
+                return InternalServerError(new InternalServerException("Error reading function"));
+            }
+
+            if (editedClient == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(editedClient);
         }
 
         [HttpGet]
-        [Route("api/Crm/GetClient/{id}")]
-        public IHttpActionResult GetClient(int id)
+        [Route("api/Client/GetAllClients")]
+        public IHttpActionResult GetAllClients()
         {
-            Client tmp;
+            List<Client> clients;
             try
             {
-                tmp = _ClientMng.GetClient(id);
+                clients = _ClientMng.GetAllClients().ToList();
             }
+
+            catch(DbFaildConnncetException e)
+            {
+                return BadRequest(e.Message);
+            }
+
             catch (Exception e)
             {
-                Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
-                throw;
+                Log("Internal server error", e);
+                return InternalServerError(new InternalServerException("Error reading function"));
             }
-            return Ok(tmp);
+
+            return Ok(clients);
         }
 
 
 
+        private void Log(string msg, Exception e)
+        {
+            Logger.Log.WriteToLog("msg" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+        }
 
-
-
-        //[Route("api/Crm/UpdateClient")]
-        //public IHttpActionResult UpdateClient([FromBody]Client editClient)
-        //{           
-        //    try
-        //    {
-        //        _ClientMng.UpdateClientDetails( ,editClient);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
-        //        throw;
-        //    }
-        //    return Ok();
-        //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //// GET: api/Crm
-        //public IQueryable<Client> GetClientsTable()
-        //{
-        //    return db.ClientsTable;
-        //}
-
-        //// GET: api/Crm/5
-        //[ResponseType(typeof(Client))]
-        //public IHttpActionResult GetClient(int id)
-        //{
-        //    Client client = db.ClientsTable.Find(id);
-        //    if (client == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(client);
-        //}
-
-        //// PUT: api/Crm/5
-        //[ResponseType(typeof(void))]
-        //public IHttpActionResult PutClient(int id, Client client)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    if (id != client.ClientID)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    db.Entry(client).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        db.SaveChanges();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ClientExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return StatusCode(HttpStatusCode.NoContent);
-        //}
-
-        ////// post: api/crm
-        ////[responsetype(typeof(client))]
-        ////public ihttpactionresult postclient(client client)
-        ////{
-        ////    if (!modelstate.isvalid)
-        ////    {
-        ////        return badrequest(modelstate);
-        ////    }
-
-        ////    db.clientstable.add(client);
-        ////    db.savechanges();
-
-        ////    return createdatroute("defaultapi", new { id = client.clientid }, client);
-        ////}
-
-        //// DELETE: api/Crm/5
-        //[ResponseType(typeof(Client))]
-        //public IHttpActionResult DeleteClient(int id)
-        //{
-        //    Client client = db.ClientsTable.Find(id);
-        //    if (client == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    db.ClientsTable.Remove(client);
-        //    db.SaveChanges();
-
-        //    return Ok(client);
-        //}
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
-
-        //private bool ClientExists(int id)
-        //{
-        //    return db.ClientsTable.Count(e => e.ClientID == id) > 0;
-        //}
     }
 }

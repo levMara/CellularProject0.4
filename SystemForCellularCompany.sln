@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientDemoDDDD", "ClientDemoDDDD\ClientDemoDDDD.csproj", "{1CD00625-BF31-4FA2-B865-47B7A721D993}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceEngine_Dal", "InvoiceEngine_Dal\InvoiceEngine_Dal.csproj", "{5D49306D-DF33-45A1-9EA6-A854E6D4A229}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{1CD00625-BF31-4FA2-B865-47B7A721D993}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CD00625-BF31-4FA2-B865-47B7A721D993}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CD00625-BF31-4FA2-B865-47B7A721D993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D49306D-DF33-45A1-9EA6-A854E6D4A229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D49306D-DF33-45A1-9EA6-A854E6D4A229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D49306D-DF33-45A1-9EA6-A854E6D4A229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D49306D-DF33-45A1-9EA6-A854E6D4A229}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

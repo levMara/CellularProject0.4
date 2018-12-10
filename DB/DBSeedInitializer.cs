@@ -46,11 +46,13 @@ namespace DB
             context.PackagesTable.Add(p6);
             context.SaveChanges();
 
-            Line l1 = new Line { LineNumber = "0509999999", Client = client1, IsActive = true, JoinDate = DateTime.Now };
-            Line l2 = new Line { LineNumber = "0509999998", Client = client2, IsActive = true, JoinDate = DateTime.Now };
-            Line l3 = new Line { LineNumber = "0509999997", Client = client3, IsActive = true, JoinDate = DateTime.Now, Package = p1 };
-            Line l4 = new Line { LineNumber = "0509999996", Client = client4, IsActive = true, JoinDate = DateTime.Now, Package = p2 };
-            Line l5 = new Line { LineNumber = "0509999995", Client = client4, IsActive = true, JoinDate = DateTime.Now, Package = p5 };
+            Line l6 = new Line { LineNumber = "0509999994", Client = client1, IsActive = true, JoinDate = DateTime.Now, Package = p1};
+            Line l1 = new Line { LineNumber = "0509999999", Client = client1, IsActive = true, JoinDate = DateTime.Now, Package = p1};
+            Line l2 = new Line { LineNumber = "0509999998", Client = client2, IsActive = true, JoinDate = DateTime.Now, Package = p1};
+            Line l3 = new Line { LineNumber = "0509999997", Client = client3, IsActive = true, JoinDate = DateTime.Now, Package = p1};
+            Line l4 = new Line { LineNumber = "0509999996", Client = client4, IsActive = true, JoinDate = DateTime.Now, Package = p2};
+            Line l5 = new Line { LineNumber = "0509999995", Client = client4, IsActive = true, JoinDate = DateTime.Now, Package = p5};
+
 
             context.LinesTable.Add(l1);
             context.LinesTable.Add(l2);
@@ -73,6 +75,26 @@ namespace DB
             context.UserLoginsTable.Add(ul5);
             context.UserLoginsTable.Add(ul6);
             context.SaveChanges();
+
+            Call call1 = new Call { CallDate = DateTime.Now, DestinationNumber = l2.LineNumber, Duration = 60, /*LineSourceID = l4,*/ LineID = 4 };
+            Call call2 = new Call { CallDate = DateTime.Now, DestinationNumber = l2.LineNumber, Duration = 60, /*LineSourceID = l4,*/ LineID = 4 };
+            Call call3 = new Call { CallDate = DateTime.Now, DestinationNumber = l2.LineNumber, Duration = 60, /*LineSourceID = l4,*/ LineID = 4 };
+            Call call4 = new Call { CallDate = DateTime.Now, DestinationNumber = l2.LineNumber, Duration = 60, /*LineSourceID = l5,*/ LineID = 5 };
+            Call call5 = new Call { CallDate = DateTime.Now, DestinationNumber = l2.LineNumber, Duration = 60, /*LineSourceID = l5,*/ LineID = 5 };
+            Call call6 = new Call { CallDate = DateTime.Now, DestinationNumber = l2.LineNumber, Duration = 60, /*LineSourceID = l5,*/ LineID = 5 };
+            Call call7 = new Call { CallDate = DateTime.Now, DestinationNumber = l2.LineNumber, Duration = 60, /*LineSourceID = l1,*/ LineID = 1 };
+
+            context.CallsTable.Add(call1);
+            context.CallsTable.Add(call2);
+            context.CallsTable.Add(call3);
+            context.CallsTable.Add(call4);
+            context.CallsTable.Add(call5);
+            context.CallsTable.Add(call6);
+
+
+            context.SaveChanges();
+
+
         }
 
     }

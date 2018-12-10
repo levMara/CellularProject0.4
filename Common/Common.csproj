@@ -43,7 +43,13 @@
   <ItemGroup>
     <Compile Include="Enum\PackageType.cs" />
     <Compile Include="Enum\UserLoginMessage.cs" />
+    <Compile Include="Exceptiones\DbFaildConnncetException.cs" />
+    <Compile Include="Exceptiones\EntityExistsException.cs" />
+    <Compile Include="Exceptiones\EntityNotExistsException.cs" />
+    <Compile Include="Exceptiones\InternalServerException.cs" />
+    <Compile Include="Interfaces\IBaseClientOperation.cs" />
     <Compile Include="Interfaces\IClientOperation.cs" />
+    <Compile Include="Interfaces\IEnvoiceEngineOperation.cs" />
     <Compile Include="Interfaces\ILineOperation.cs" />
     <Compile Include="Interfaces\IPackageOperation.cs" />
     <Compile Include="Interfaces\IUserLoginOperation.cs" />
@@ -62,5 +68,6 @@
     <Compile Include="models\Sms.cs" />
     <Compile Include="models\UserLogin.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

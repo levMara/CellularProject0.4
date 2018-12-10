@@ -1,5 +1,6 @@
 using Common.Interfaces;
 using Crm_Dal;
+using InvoiceEngine_Dal;
 using Server.Repositories;
 using System;
 
@@ -49,6 +50,8 @@ namespace Server
             container.RegisterType<ILineOperatoin, CrmLineManager>();
             container.RegisterType<IPackageOperation, CrmPackageManager>();
             container.RegisterType<IUserLoginOperation, UserRepository>();
+            container.RegisterType<IEnvoiceEngineOperation, InvoiceManager>();
+            container.RegisterType<IBaseClientOperation, CrmClientManager>();
         }
     }
 }

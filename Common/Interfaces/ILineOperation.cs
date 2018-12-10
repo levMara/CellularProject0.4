@@ -8,10 +8,12 @@ namespace Common.Interfaces
 {
     public interface ILineOperatoin
     {
-        void AddLine(int clientId);
+        Line AddLine(int clientId);
 
         ICollection<Line> GetAllLines();
 
-        void DeleteLine(string lineNumber);
+        ICollection<Line> GetAllClientLines(int clientId);
+
+        Line DeleteLine(string lineNumber);
     }
 }

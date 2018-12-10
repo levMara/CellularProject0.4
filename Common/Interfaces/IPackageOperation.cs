@@ -10,8 +10,8 @@ namespace Common.Interfaces
     {
         ICollection<Package> GetAllTemplatePackages();
 
-        void AddTemplatePackageToLine(Line line, Package package);
+        Package AddTemplatePackageToLine(int lineId, Package package);
 
-        void AddCustomPackageToLine(Line line, Package customPackage);
+        Package AddCustomPackageToLine(int lineId, Package customPackage);
     }
 }

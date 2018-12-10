@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Common;
+using Common.Exceptiones;
 using Common.Interfaces;
 using DB;
 
@@ -24,109 +25,111 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/Package/Try")]
-        public string Try()
+        [Route("api/Packages/GetAllTemplatePackages")]
+        public IHttpActionResult GetAllTemplatePackages()
         {
-            return "ggggggggggggg";
+            ICollection<Package> packages;
+            try
+            {
+                packages = _packageMng.GetAllTemplatePackages();
+            }
+
+            catch (DbFaildConnncetException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            catch (Exception e)
+            {
+                Log("Internal server error", e);
+                return InternalServerError(new InternalServerException("Error reading function"));
+            }
+
+            return Ok(packages);
         }
 
-        //// GET: api/Packages
-        //public IQueryable<Package> GetPackagesTable()
-        //{
-        //    return db.PackagesTable;
-        //}
+        [HttpGet]
+        [Route("api/Packages/AddTemplatePackageToLine/{lineId}")]
+        public IHttpActionResult AddTemplatePackageToLine(int lineId, [FromBody]Package package)
+        {
+            if (lineId < 1 )
+            {
+                return BadRequest("Worng line id");
+            }
 
-        //// GET: api/Packages/5
-        //[ResponseType(typeof(Package))]
-        //public IHttpActionResult GetPackage(int id)
-        //{
-        //    Package package = db.PackagesTable.Find(id);
-        //    if (package == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    return Ok(package);
-        //}
+            Package eddedPackage;
+            try
+            {
+                eddedPackage = _packageMng.AddTemplatePackageToLine(lineId, package);
+            }
 
-        //// PUT: api/Packages/5
-        //[ResponseType(typeof(void))]
-        //public IHttpActionResult PutPackage(int id, Package package)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+            catch(EntityNotExistsException e)
+            {
+                return BadRequest(e.Message);
+            }
 
-        //    if (id != package.PackageID)
-        //    {
-        //        return BadRequest();
-        //    }
+            catch (DbFaildConnncetException e)
+            {
+                return BadRequest(e.Message);
+            }
 
-        //    db.Entry(package).State = EntityState.Modified;
+            catch (Exception e)
+            {
+                Log("Internal server error", e);
+                return InternalServerError(new InternalServerException("Error reading function"));
+            }
 
-        //    try
-        //    {
-        //        db.SaveChanges();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!PackageExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            return Ok(package);
+        }
 
-        //    return StatusCode(HttpStatusCode.NoContent);
-        //}
+        [HttpGet]
+        [Route("api/Packages/AddCustomPackageToLine/{lineId}")]
+        public IHttpActionResult AddCustomPackageToLine(int lineId, [FromBody]Package customPackage)
+        {
+            if (lineId < 1)
+            {
+                return BadRequest("Worng line id");
+            }
 
-        //// POST: api/Packages
-        //[ResponseType(typeof(Package))]
-        //public IHttpActionResult PostPackage(Package package)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    db.PackagesTable.Add(package);
-        //    db.SaveChanges();
+            Package eddedPackage;
+            try
+            {
+                eddedPackage = _packageMng.AddCustomPackageToLine(lineId, customPackage);
+            }
 
-        //    return CreatedAtRoute("DefaultApi", new { id = package.PackageID }, package);
-        //}
+            catch (EntityNotExistsException e)
+            {
+                return BadRequest(e.Message);
+            }
 
-        //// DELETE: api/Packages/5
-        //[ResponseType(typeof(Package))]
-        //public IHttpActionResult DeletePackage(int id)
-        //{
-        //    Package package = db.PackagesTable.Find(id);
-        //    if (package == null)
-        //    {
-        //        return NotFound();
-        //    }
+            catch (DbFaildConnncetException e)
+            {
+                return BadRequest(e.Message);
+            }
 
-        //    db.PackagesTable.Remove(package);
-        //    db.SaveChanges();
+            catch (Exception e)
+            {
+                Log("Internal server error", e);
+                return InternalServerError(new InternalServerException("Error reading function"));
+            }
 
-        //    return Ok(package);
-        //}
+            return Ok(eddedPackage);
+        }
 
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
 
-        //private bool PackageExists(int id)
-        //{
-        //    return db.PackagesTable.Count(e => e.PackageID == id) > 0;
-        //}
+        private void Log(string msg, Exception e)
+        {
+            Logger.Log.WriteToLog("msg" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+        }
     }
 }

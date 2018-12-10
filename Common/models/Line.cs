@@ -9,6 +9,12 @@ namespace Common
 {
     public class Line
     {
+        public Line()
+        {
+            Calls = new List<Call>();
+            Sms = new List<Sms>();
+            Payments = new List<Payment>();
+        }
         [Key]
         public int LineID { get; set; }
 
@@ -17,7 +23,7 @@ namespace Common
         public DateTime JoinDate { get; set; }
         public bool IsActive { get; set; }
 
-        public virtual Package Package { get; set; }
+        public Package Package { get; set; }
 
         [Required]
         public Client Client { get; set; }

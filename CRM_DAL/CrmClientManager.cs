@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Enum;
+using Common.Exceptiones;
 using Common.Interfaces;
 using DB;
 using System;
@@ -10,30 +11,150 @@ using System.Threading.Tasks;
 
 namespace Crm_Dal
 {
-    public class CrmClientManager : IClientOperation
+    public class CrmClientManager : IClientOperation, IBaseClientOperation
     {
         CellularModelDB _context = new CellularModelDB();
 
-        public void AddClient(Client newClient)
+
+        public Client AddClient(Client newClient)
         {
             try
             {
-                if (newClient != null)
+                using (_context)
                 {
-                    using (var context = new CellularModelDB())
+                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == newClient.ClientID);
+
+                    if (tmp != null)
                     {
-                        context.ClientsTable.Add(newClient);
-                        context.SaveChanges();
-                        SetUserNameAndPass(newClient);                        
+                        throw new EntityExistsException("Client with same client id exists!");
                     }
+                    _context.ClientsTable.Add(newClient);
+                    _context.SaveChanges();
+                    SetUserNameAndPass(newClient);
+
+                    Client eddedClient = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == newClient.ClientID);
+
+                    return eddedClient;
                 }
             }
             catch (Exception e)
             {
-                Log(e);            
-                throw new Exception();
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
             }
-        }      
+        }
+
+        public Client DeleteClient(int id)
+        {
+            try
+            {
+                using (var contex = new CellularModelDB())
+                {
+                    Client tmp = contex.ClientsTable.FirstOrDefault((c) => c.ClientID == id);
+                    foreach (var line in tmp.Lines)
+                    {
+                        line.IsActive = false;
+                    }
+                    return tmp;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
+            }
+        }
+
+        public Client UpdateClientDetails(Client editClient)
+        {
+            try
+            {
+                using (_context)
+                {
+                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == editClient.ClientID);
+
+                    if (tmp == null)
+                    {
+                        return tmp;
+                    }
+                    _context.Entry(tmp).CurrentValues.SetValues(editClient);
+                    _context.SaveChanges();
+                    tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == editClient.ClientID);
+                    return tmp;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
+            }
+        }
+
+
+
+        public Client GetClient(int clientId)
+        {
+            try
+            {
+                using (_context)
+                {
+                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
+                    return tmp;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
+            }
+        }
+
+        public string ChangeClientType(int clientId, ClientTypeName newType)
+        {
+            try
+            {
+                using (_context)
+                {
+                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
+                    if (tmp != null)
+                    {
+                        tmp.ClientType = newType;
+                        _context.SaveChanges();
+                        return "Client type has changed!";
+                    }
+                    return "Error, client id worng!";
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
+            }
+        }
+
+        public ICollection<Client> GetAllClients()
+        {
+            try
+            {
+                using (_context)
+                {
+                    List<Client> clients = _context.ClientsTable.ToList();
+                    return clients;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
+            }
+        }
+
+
+
+        private void Log(Exception e)
+        {
+            Logger.Log.WriteToLog("" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+        }
 
         private void SetUserNameAndPass(Client newClient)
         {
@@ -58,75 +179,6 @@ namespace Crm_Dal
                 Log(e);
                 throw new Exception();
             }
-        }
-
-        public Client GetClient(int clientId)
-        {
-            try
-            {
-                using (_context)
-                {
-                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
-                    return tmp;
-                }
-            }
-            catch (Exception e)
-            {
-                Log(e);
-                throw new Exception();
-            }
-        }
-
-        public void UpdateClientDetails(int clientId, Client editClient)
-        {
-            try
-            {
-                using (_context)
-                {
-                    if (editClient != null)
-                    {
-                        Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
-                        editClient.ClientID = clientId;
-                        _context.Entry(tmp).CurrentValues.SetValues(editClient); 
-                    }
-
-                }
-
-                // client.ClientID;
-
-            }
-            catch (Exception e)
-            {
-                Log(e);
-                throw new Exception();
-            }
-        }
-
-        public void DeleteClient(int id)
-        {
-            try
-            {
-                Client tmp = new Client();
-                using (var contex = new CellularModelDB())
-                {
-                    tmp = contex.ClientsTable.FirstOrDefault((c) => c.ClientID == id);
-                    foreach (var line in tmp.Lines)
-                    {
-                        line.IsActive = false;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Log(e);
-                throw new Exception();
-            }
-        }
-
-        private void Log(Exception e)
-        {
-            Logger.Log.WriteToLog("Failed connect to data base" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
-
         }
     }
 }

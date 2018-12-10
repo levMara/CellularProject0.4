@@ -206,6 +206,7 @@
     <Compile Include="Controllers\CrmControllers\ClientController.cs" />
     <Compile Include="Controllers\CrmControllers\LineController.cs" />
     <Compile Include="Controllers\CrmControllers\PackagesController.cs" />
+    <Compile Include="Controllers\InvoiceControllers\InvoiceController.cs" />
     <Compile Include="Controllers\UserLoginController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -314,6 +315,10 @@
     <ProjectReference Include="..\DB\DB.csproj">
       <Project>{8e1e345f-2cbf-49bc-a14a-a9ce4c7c7643}</Project>
       <Name>DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InvoiceEngine_Dal\InvoiceEngine_Dal.csproj">
+      <Project>{5D49306D-DF33-45A1-9EA6-A854E6D4A229}</Project>
+      <Name>InvoiceEngine_Dal</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

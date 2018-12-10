@@ -22,8 +22,12 @@ namespace Server
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-           //create db if model chenge
-            using(var context = new CellularModelDB())
+
+            var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All;
+
+            //create db if model chenge
+            using (var context = new CellularModelDB())
             {
                 List<Client> clients = context.ClientsTable.ToList();
             }

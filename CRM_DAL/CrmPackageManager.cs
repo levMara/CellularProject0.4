@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Enum;
+using Common.Exceptiones;
 using Common.Interfaces;
 using DB;
 using System;
@@ -18,53 +19,84 @@ namespace Crm_Dal
         {
             try
             {
-                using (var context = new CellularModelDB())
-                {
-                    List<Package> packages = context.PackagesTable.Where((p) => p.PackageType != PackageType.custom).ToList();
-                    return packages;
-                }              
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public void AddTemplatePackageToLine(Line line, Package package)
-        {
-            try
-            {
                 using (_context)
                 {
-                    line.Package = package;
+                    List<Package> packages = _context.PackagesTable.Where((p) => p.PackageType != PackageType.custom).ToList();
+                    return packages;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
             }
         }
 
-        //save the new values?
-        public void AddCustomPackageToLine(Line line, Package customPackage)
+        public Package AddTemplatePackageToLine(int lineId, Package package)
         {
             try
             {
                 using (_context)
                 {
-                    customPackage.PackageType = PackageType.custom;
-                    line.Package = customPackage;
+                    Line tmpLine = _context.LinesTable.SingleOrDefault((l) => l.LineID == lineId);
+                    if (tmpLine == null)
+                    {
+                        throw new EntityNotExistsException("This line not exists");
+                    }
+
+                    Package tmpPackage = _context.PackagesTable.SingleOrDefault((p) => p.PackageID == package.PackageID && package.PackageType != PackageType.custom);
+                    if (tmpPackage == null)
+                    {
+                        throw new EntityNotExistsException("This package not exists or his type is custom package");
+                    }
+
+                    tmpLine.Package = package;
+                    _context.SaveChanges();
+                    return package;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
+            }
+        }
+
+        public Package AddCustomPackageToLine(int lineId, Package customPackage)
+        {
+            try
+            {
+                using (_context)
+                {
+                    Line tmpLine = _context.LinesTable.SingleOrDefault((l) => l.LineID == lineId);
+                    if (tmpLine == null)
+                    {
+                        throw new EntityNotExistsException("This line not exists");
+                    }
+
+                    Package tmpPackage = _context.PackagesTable.SingleOrDefault((p) => p.PackageID == customPackage.PackageID && customPackage.PackageType == PackageType.custom);
+                    if (tmpPackage == null)
+                    {
+                        throw new EntityNotExistsException("This package not exists or his type is template package");
+                    }
+
+                    tmpLine.Package = customPackage;
                     _context.PackagesTable.Add(customPackage);
                     _context.SaveChanges();
+                    return customPackage;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
             }
+        }
+
+
+        private void Log(Exception e)
+        {
+            Logger.Log.WriteToLog("" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
         }
     }
 }

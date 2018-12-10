@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Exceptiones;
 using Common.Interfaces;
 using DB;
 using System;
@@ -15,41 +16,64 @@ namespace Crm_Dal
         readonly string _lineNumber = "0520000000";
         int _count = 1;
 
-        private string GenerateLineNumber()
-        {
-            int.TryParse(_lineNumber, out int newNumber);
-            newNumber += _count;
-            _count++;
-            string stringNumber = "0" + newNumber.ToString();
-            if (!(CheckLineNumber(stringNumber)))
-                GenerateLineNumber();
-            return stringNumber;
-        }
+        
 
-        private bool CheckLineNumber(string lineNumber)
-        {
-            using (var context = new CellularModelDB())
-            {
-                Line tmp = context.LinesTable.FirstOrDefault((l) => l.LineNumber == lineNumber);
-                return tmp == null ? true : false;
-            }
-        }
-
-        public void AddLine(int clientId)
+        public Line AddLine(int clientId)
         {
             try
             {
-                using (var context = new CellularModelDB())
+                using (_context)
                 {
-                    Client tmp = context.ClientsTable.FirstOrDefault((c) => c.ClientID == clientId);
+                    Client tmp = _context.ClientsTable.FirstOrDefault((c) => c.ClientID == clientId);
 
-                    Line line = new Line { Client = tmp, IsActive = true, JoinDate = DateTime.Now, LineNumber = GenerateLineNumber()};
+                    if (tmp == null)
+                    {
+                        throw new EntityNotExistsException("Client id worng");
+                    }
+
+                    string newLineNumber = GenerateLineNumber();
+                    Line line = new Line { Client = tmp, IsActive = true, JoinDate = DateTime.Now,LineNumber = newLineNumber };
                     tmp.Lines.Add(line);
+                    _context.SaveChanges();
+
+                    Line newLine = _context.LinesTable.SingleOrDefault((l) => l.LineNumber == newLineNumber);
+                    
+                    if(newLine == null)
+                    {
+                        throw new EntityNotExistsException("Failed to add line");
+                    }
+
+                    return newLine; 
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
+            }
+        }
+
+        public Line DeleteLine(string lineNumber)
+        {
+            try
+            {
+               using (var context = new CellularModelDB())
+                {
+                    Line tmp = context.LinesTable.FirstOrDefault((l) => l.LineNumber == lineNumber);
+                    if (tmp == null)
+                    {
+                        throw new EntityNotExistsException("Line number not exists");
+                    }
+
+                    tmp.IsActive = false;
+                    context.SaveChanges();
+                    return tmp;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
             }
         }
 
@@ -63,29 +87,71 @@ namespace Crm_Dal
                     return lines;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
             }
         }
 
-        public void DeleteLine(string lineNumber)
+        public ICollection<Line> GetAllClientLines(int clientId)
         {
             try
             {
-               using (var context = new CellularModelDB())
+                List<Line> liens;
+                using (_context)
                 {
-                    Line tmp = context.LinesTable.FirstOrDefault((l) => l.LineNumber == lineNumber);
-                    tmp.IsActive = false;
-                    context.SaveChanges();
+                    Client tmp = _context.ClientsTable.SingleOrDefault((c) => c.ClientID == clientId);
+                    if (tmp == null)
+                    {
+                        throw new EntityNotExistsException("Id Of the client is incorrect");
+                    }
+
+                    liens = _context.LinesTable.Where((l) => l.Client.ClientID == clientId && l.IsActive == true).ToList();
+                    return liens;                  
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
             }
         }
-        
+
+
+        private string GenerateLineNumber()
+        {
+            int.TryParse(_lineNumber, out int newNumber);
+            newNumber += _count;
+            _count++;
+            string stringNumber = "0" + newNumber.ToString();
+            if (!(CheckLineNumber(stringNumber)))
+                GenerateLineNumber();
+            return stringNumber;
+        }
+
+        private bool CheckLineNumber(string lineNumber)
+        {
+            try
+            {
+                using (var context = new CellularModelDB())
+                {
+                    Line tmp = context.LinesTable.FirstOrDefault((l) => l.LineNumber == lineNumber);
+                    return tmp == null ? true : false;
+                }
+            }
+
+            catch(Exception e)
+            {
+                Log(e);
+                throw new DbFaildConnncetException("Failed connect to data base");
+            }
+        }
+
+        private void Log(Exception e)
+        {
+            Logger.Log.WriteToLog("" + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + "Exception details: " + e.ToString());
+        }
+
     }
 }

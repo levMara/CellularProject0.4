@@ -10,7 +10,14 @@ namespace Common
 {
     public class Client
     {
+
+        public Client()
+        {
+            Lines = new List<Line>();
+                 
+        }
         [Key]
+        [Range(1, 1000000000)]
         public int ClientID { get; set; }
 
         [Required, MaxLength(10, ErrorMessage = "Your input is too long")]

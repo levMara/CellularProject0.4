@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,12 @@ namespace Common.Interfaces
 {
     public interface IClientOperation 
     {
-        void AddClient(Client newClient);
 
         Client GetClient(int clientId);
 
-        void UpdateClientDetails(int clientId, Client editClient);
+        ICollection<Client> GetAllClients();
 
-        void DeleteClient(int id);
+        string ChangeClientType(int clientId, ClientTypeName newType);
 
     }
 }
